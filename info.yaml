@@ -1,0 +1,65 @@
+# Tiny Tapeout project information
+project:
+  title:        "FOC BLDC motor controller + RV32E MCU"      # Project title
+  author:       "aPR0T0"      # Your name
+  discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
+  description:  "Hardware field-oriented control for 24-48 V BLDC/PMSM motors with hall sensors, dead-time gate-drive logic, QSPI flash XIP RISC-V CPU and a CRC-protected 12 Mbaud host link"      # One line description of what your project does
+  language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
+  clock_hz:     50000000       # Clock frequency in Hz (or 0 if not applicable)
+
+  # How many tiles your design occupies? A single tile is about 167x108 uM.
+  tiles: "8x4"          # Valid values: 1x1, 1x2, 2x2, 3x2, 4x2, 6x2, 8x2, 3x4, 4x4, 5x4, 6x4 or 8x4
+
+  # Your top module name must start with "tt_um_". Make it unique by including your github username:
+  top_module:  "tt_um_apr0t0_foc_mcu"
+
+  # List your project's source files here.
+  # Source files must be in ./src and you must list each source file separately, one per line.
+  # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
+  source_files:
+    - "project.v"
+    - "foc_soc.v"
+    - "pwm3.v"
+    - "hall_sensor.v"
+    - "foc_math.v"
+    - "foc_engine.v"
+    - "spi_bus.v"
+    - "uart.v"
+    - "host_link.v"
+    - "rv32e_core.v"
+
+# The pinout of your project. Leave unused pins blank. DO NOT delete or add any pins.
+# This section is for the datasheet/website. Use descriptive names (e.g., RX, TX, MOSI, SCL, SEG_A, etc.).
+pinout:
+  # Inputs
+  ui[0]: "HALL_A"
+  ui[1]: "HALL_B"
+  ui[2]: "HALL_C"
+  ui[3]: "UART_RX (host to chip; demo board RP2350 UART1 TX)"
+  ui[4]: "nFAULT (gate driver fault, active low)"
+  ui[5]: "ADC_SDOB (current sense channel B data)"
+  ui[6]: "nESTOP (emergency stop, active low)"
+  ui[7]: "BOOT (1 = run firmware after reset, 0 = CPU held for the host)"
+
+  # Outputs
+  uo[0]: "PWM_AH (phase A high side)"
+  uo[1]: "PWM_AL (phase A low side)"
+  uo[2]: "PWM_BH (phase B high side)"
+  uo[3]: "PWM_BL (phase B low side)"
+  uo[4]: "UART_TX (chip to host; demo board RP2350 UART1 RX)"
+  uo[5]: "PWM_CH (phase C high side)"
+  uo[6]: "PWM_CL (phase C low side)"
+  uo[7]: "DRV_EN (gate driver enable)"
+
+  # Bidirectional pins
+  uio[0]: "FLASH_CS# (QSPI Pmod CS0)"
+  uio[1]: "SD0 / MOSI"
+  uio[2]: "SD1 / MISO / ADC_SDOA"
+  uio[3]: "SCK"
+  uio[4]: "SD2 (WP#)"
+  uio[5]: "SD3 (HOLD#)"
+  uio[6]: "ADC_CS# (QSPI Pmod CS1)"
+  uio[7]: "AUX_CS# (QSPI Pmod CS2, gyro / IMU)"
+
+# Do not change!
+yaml_version: 6

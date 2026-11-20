@@ -1,0 +1,16 @@
+{
+  "clk_hz": 50000000,
+  "pwm_hz": 20000,
+  "dead_time_ns": 500,
+  "min_off_ns": 400,
+  "vbus": 24.0,
+  "ifs": 20.0,
+  "overcurrent_a": 15.0,
+  "current_bw_hz": 1000,
+  "motor": { "R": 0.5, "L": 0.0005, "pole_pairs": 4, "Kt": 0.06 },
+  "adc": { "bits": 16, "lshift": 0, "div": 1, "cpol": 0, "late": 0, "invert": 1, "cs_delay": 0 },
+  "hall_map": { "1": 1, "2": 3, "3": 2, "4": 5, "5": 0, "6": 4 },
+  "hall_filter": 50,
+  "angle_offset": 0,
+  "speed_shift": 4
+}
