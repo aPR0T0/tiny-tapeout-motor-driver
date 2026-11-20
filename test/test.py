@@ -526,7 +526,8 @@ async def wait_reg(link, addr, pred, timeout_us, poll_us=None):
 async def test_cpu_firmware(dut):
     """RV32E boots from QSPI flash (XIP), passes the ISA self test, runs the mailbox app."""
     exp_path = os.path.join(FW_DIR, "selftest_expected.txt")
-    expected = int(open(exp_path).read(), 16)
+    with open(exp_path) as f:
+        expected = int(f.read(), 16)
     await start(dut, boot=1)
     link = await link_up(dut)
     v = await wait_reg(link, R.MBOX_C2H, lambda x: x != 0, us(60000), poll_us=us(500))
@@ -557,7 +558,9 @@ async def test_cpu_firmware(dut):
     await link.wr(R.CPU_CTRL, 0)
     await link.wr(R.PWM_PERIOD, 500)
     await link.wr(R.ADC_CFG, 16 | (1 << 9) | (1 << 15) | (1 << 16))
-    await link.wr(R.CTRL, ctrl(R.CTRL_ADC_EN, amode=R.AMODE_FORCED))
+    # SPI_SYNC: the firmware's flash bursts must wait for the post-conversion window,
+    # otherwise a burst can overlap a sample (the chip then skips it and flags ADC_DROP)
+    await link.wr(R.CTRL, ctrl(R.CTRL_ADC_EN, R.CTRL_SPI_SYNC, amode=R.AMODE_FORCED))
     n0 = int(dut.adc.nconv.value)
     t0 = cocotb.utils.get_sim_time("us")
     await link.wr(R.CPU_CTRL, 1)
